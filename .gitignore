@@ -1,0 +1,39 @@
+# NetBeans IDE files
+nbproject/private/
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+nbactions.xml
+nb-configuration.xml
+
+# Compiled Java files
+*.class
+*.jar
+
+# Output directories
+out/
+bin/
+target/
+
+# Log files
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE files (other IDEs)
+.idea/
+.vscode/
+.settings/
+.classpath
+.project
+*.iml
+
+# Temporary files
+*.tmp
+*.bak
+*~
