@@ -61,7 +61,7 @@ public class Account {
         return false;
     }
     
-    // Withdraw method - COMPLETE IMPLEMENTATION
+    // Withdraw method
     public boolean withdraw(double amount) {
         if(amount <= 0) {
             System.out.println("✗ Withdrawal failed: Amount must be positive");
@@ -90,23 +90,51 @@ public class Account {
         System.out.println("=======================\n");
     }
     
-    // Transfer method stub (for Day 3)
+    // COMPLETE TRANSFER METHOD - DAY 3 IMPLEMENTATION
     public boolean transfer(Account recipient, double amount) {
-        // Basic check
         if(recipient == null) {
-            System.out.println("✗ Transfer failed: Invalid recipient account");
+            System.out.println("✗ Transfer failed: Recipient account does not exist");
             return false;
         }
         
-        if(this.withdraw(amount)) {
-            recipient.deposit(amount);
-            System.out.println("✓ Transfer completed successfully");
-            System.out.println("  Transferred: R" + String.format("%.2f", amount));
-            System.out.println("  From: " + this.accountNumber + " (" + this.holderName + ")");
-            System.out.println("  To: " + recipient.accountNumber + " (" + recipient.holderName + ")");
-            return true;
+        if(this.accountNumber == recipient.accountNumber) {
+            System.out.println("✗ Transfer failed: Cannot transfer to same account");
+            return false;
         }
-        System.out.println("✗ Transfer failed");
+        
+        if(amount <= 0) {
+            System.out.println("✗ Transfer failed: Amount must be positive");
+            return false;
+        }
+        
+        System.out.println("\n=== TRANSFER INITIATED ===");
+        System.out.println("From: " + this.holderName + " (Acc: " + this.accountNumber + ")");
+        System.out.println("To: " + recipient.holderName + " (Acc: " + recipient.accountNumber + ")");
+        System.out.println("Amount: R" + String.format("%.2f", amount));
+        System.out.println("=".repeat(30));
+        
+        // First withdraw from this account
+        if(this.withdraw(amount)) {
+            // Then deposit to recipient account
+            if(recipient.deposit(amount)) {
+                System.out.println("\n✓ TRANSFER COMPLETED SUCCESSFULLY");
+                System.out.println("=".repeat(35));
+                System.out.println("Sender (" + this.holderName + "):");
+                System.out.println("  New Balance: R" + String.format("%.2f", this.balance));
+                System.out.println("-".repeat(35));
+                System.out.println("Recipient (" + recipient.holderName + "):");
+                System.out.println("  New Balance: R" + String.format("%.2f", recipient.balance));
+                System.out.println("=".repeat(35));
+                return true;
+            } else {
+                // If deposit fails, refund the withdrawal
+                this.deposit(amount);
+                System.out.println("✗ Transfer failed: Could not complete recipient deposit");
+                return false;
+            }
+        }
+        
+        System.out.println("✗ Transfer failed: Insufficient funds or other error");
         return false;
     }
     
@@ -117,5 +145,11 @@ public class Account {
         System.out.println("Holder Name: " + holderName);
         System.out.println("Balance: R" + String.format("%.2f", balance));
         System.out.println("===========================\n");
+    }
+    
+    // NEW: Display account summary (for lists)
+    public void displayAccountSummary() {
+        System.out.println(String.format("%-15s %-20s R%-12.2f", 
+            accountNumber, holderName, balance));
     }
 }
