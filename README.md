@@ -47,4 +47,35 @@ A Java project demonstrating Object-Oriented Programming concepts.
 - Menu-driven interface with 7 options
 
 ### Project Structure
+src/
+├── com/obcodes/bankaccountmanagementsystem/
+│ ├── Account.java # Complete with deposit, withdraw, transfer
+│ ├── BankAccountManagementSystem.java # Full banking operations
+│ └── Menu.java # Enhanced menu system
+
+### Sample Transfer Output:
+=== TRANSFER INITIATED ===
+From: John Doe (Acc: 123456789012)
+To: Jane Smith (Acc: 987654321098)
+Amount: R500.00
+==============================
+
+✓ Withdrawal successful: R500.00
+Remaining balance: R4500.00
+✓ Deposit successful: R500.00
+
+✓ TRANSFER COMPLETED SUCCESSFULLY
+===================================
+Sender (John Doe):
+New Balance: R4500.00
+
+Recipient (Jane Smith):
+New Balance: R10500.00
+===================================
+
+## Coming Next (Day 4):
+- Transaction history tracking
+- Account search by name
+- Enhanced error handling
+- File persistence (optional)
 
