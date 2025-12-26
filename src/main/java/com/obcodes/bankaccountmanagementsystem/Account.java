@@ -1,5 +1,6 @@
 package com.obcodes.bankaccountmanagementsystem;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -10,13 +11,18 @@ public class Account {
     private long accountNumber;
     private String holderName;
     private double balance;
+    private ArrayList<Transaction> transactionHistory; // NEW: Transaction history
     
     // Constructor
     public Account(String holderName, double initialDeposit) {
         this.accountNumber = generateAccountNumber();
         this.holderName = holderName;
+        this.transactionHistory = new ArrayList<>(); // Initialize transaction history
+        
         if(initialDeposit > 0) {
             this.balance = initialDeposit;
+            // Record initial deposit transaction
+            addTransaction("DEPOSIT", initialDeposit, "Initial deposit");
         } else {
             this.balance = 0.0;
         }
@@ -41,6 +47,10 @@ public class Account {
         return balance;
     }
     
+    public ArrayList<Transaction> getTransactionHistory() {
+        return transactionHistory;
+    }
+    
     // Account number generation
     private long generateAccountNumber() {
         Random random = new Random();
@@ -50,18 +60,31 @@ public class Account {
         return min + (long)(random.nextDouble() * (max - min));
     }
     
-    // Deposit method
+    // Helper method to add transaction to history
+    private void addTransaction(String type, double amount, String description) {
+        Transaction transaction = new Transaction(
+            accountNumber, 
+            type, 
+            amount, 
+            balance, 
+            description
+        );
+        transactionHistory.add(transaction);
+    }
+    
+    // Deposit method with transaction history
     public boolean deposit(double amount) {
         if(amount > 0) {
             balance += amount;
             System.out.println("✓ Deposit successful: R" + String.format("%.2f", amount));
+            addTransaction("DEPOSIT", amount, "Cash deposit");
             return true;
         }
         System.out.println("✗ Deposit failed: Invalid amount");
         return false;
     }
     
-    // Withdraw method
+    // Withdraw method with transaction history
     public boolean withdraw(double amount) {
         if(amount <= 0) {
             System.out.println("✗ Withdrawal failed: Amount must be positive");
@@ -78,6 +101,7 @@ public class Account {
         balance -= amount;
         System.out.println("✓ Withdrawal successful: R" + String.format("%.2f", amount));
         System.out.println("  Remaining balance: R" + String.format("%.2f", balance));
+        addTransaction("WITHDRAWAL", amount, "Cash withdrawal");
         return true;
     }
     
@@ -90,7 +114,7 @@ public class Account {
         System.out.println("=======================\n");
     }
     
-    // COMPLETE TRANSFER METHOD - DAY 3 IMPLEMENTATION
+    // Transfer method with transaction history
     public boolean transfer(Account recipient, double amount) {
         if(recipient == null) {
             System.out.println("✗ Transfer failed: Recipient account does not exist");
@@ -117,6 +141,13 @@ public class Account {
         if(this.withdraw(amount)) {
             // Then deposit to recipient account
             if(recipient.deposit(amount)) {
+                // Add transfer transaction for both accounts
+                String senderDesc = "Transfer to Acc: " + recipient.accountNumber;
+                String receiverDesc = "Transfer from Acc: " + this.accountNumber;
+                
+                addTransaction("TRANSFER_OUT", amount, senderDesc);
+                recipient.addTransaction("TRANSFER_IN", amount, receiverDesc);
+                
                 System.out.println("\n✓ TRANSFER COMPLETED SUCCESSFULLY");
                 System.out.println("=".repeat(35));
                 System.out.println("Sender (" + this.holderName + "):");
@@ -138,18 +169,44 @@ public class Account {
         return false;
     }
     
+    // NEW: Display transaction history
+    public void displayTransactionHistory() {
+        System.out.println("\n" + "=".repeat(100));
+        System.out.println("                TRANSACTION HISTORY - " + holderName.toUpperCase());
+        System.out.println("                Account: " + accountNumber);
+        System.out.println("=".repeat(100));
+        
+        if(transactionHistory.isEmpty()) {
+            System.out.println("No transactions found for this account.");
+            return;
+        }
+        
+        System.out.println(String.format("%-15s %-20s %-15s %-12s %-12s %-20s %-30s",
+            "Transaction ID", "Date & Time", "Type", "Amount", "Balance", "Account", "Description"));
+        System.out.println("-".repeat(100));
+        
+        for(Transaction transaction : transactionHistory) {
+            transaction.displayTransaction();
+        }
+        
+        System.out.println("-".repeat(100));
+        System.out.println("Total Transactions: " + transactionHistory.size());
+        System.out.println("Current Balance: R" + String.format("%.2f", balance));
+    }
+    
     // Display account info
     public void displayAccountInfo() {
         System.out.println("\n=== Account Information ===");
         System.out.println("Account Number: " + accountNumber);
         System.out.println("Holder Name: " + holderName);
         System.out.println("Balance: R" + String.format("%.2f", balance));
+        System.out.println("Transactions: " + transactionHistory.size() + " recorded");
         System.out.println("===========================\n");
     }
     
-    // NEW: Display account summary (for lists)
+    // Display account summary (for lists)
     public void displayAccountSummary() {
-        System.out.println(String.format("%-15s %-20s R%-12.2f", 
-            accountNumber, holderName, balance));
+        System.out.println(String.format("%-15s %-20s R%-12.2f %-10d", 
+            accountNumber, holderName, balance, transactionHistory.size()));
     }
 }
