@@ -1,445 +1,499 @@
 package com.obcodes.bankaccountmanagementsystem;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * Main class to run the banking system
+ * Main banking system application
+ * Demonstrates complete OOP system with menu-driven interface
  * @author Obakeng Phale
  */
 public class BankAccountManagementSystem {
     
-    private static ArrayList<Account> accounts = new ArrayList<>();
-    private static Scanner scanner = new Scanner(System.in);
+    private static final ArrayList<Account> accounts = new ArrayList<>();
+    private static final Scanner scanner = new Scanner(System.in);
+    
+    // Color codes for better UI (optional - works in most modern terminals)
+    private static final String RESET = "\u001B[0m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String RED = "\u001B[31m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String CYAN = "\u001B[36m";
+    private static final String BOLD = "\u001B[1m";
     
     public static void main(String[] args) {
         displayWelcomeBanner();
-        
-        // Initialize with some test accounts
         initializeTestAccounts();
         
         boolean running = true;
-        
-        while(running) {
-            Menu.displayMainMenu();
-            int choice = getIntInput("Enter your choice (1-9): ");
-            
-            switch(choice) {
-                case 1:
-                    createNewAccount();
-                    break;
-                case 2:
-                    viewAllAccounts();
-                    break;
-                case 3:
-                    searchAccountByName(); // NEW: Day 4 Feature
-                    break;
-                case 4:
-                    depositMoney();
-                    break;
-                case 5:
-                    withdrawMoney();
-                    break;
-                case 6:
-                    checkAccountBalance();
-                    break;
-                case 7:
-                    transferMoney();
-                    break;
-                case 8:
-                    viewTransactionHistory(); // NEW: Day 4 Feature
-                    break;
-                case 9:
-                    exitSystem();
-                    running = false;
-                    break;
-                default:
-                    System.out.println("\n✗ Invalid choice. Please select 1-9.");
+        while (running) {
+            try {
+                Menu.displayMainMenu();
+                int choice = getIntInput("Enter your choice (1-10): ", 1, 10);
+                
+                switch (choice) {
+                    case 1:
+                        createNewAccount();
+                        break;
+                    case 2:
+                        viewAllAccounts();
+                        break;
+                    case 3:
+                        searchAccountByName();
+                        break;
+                    case 4:
+                        depositMoney();
+                        break;
+                    case 5:
+                        withdrawMoney();
+                        break;
+                    case 6:
+                        checkAccountBalance();
+                        break;
+                    case 7:
+                        transferMoney();
+                        break;
+                    case 8:
+                        viewTransactionHistory();
+                        break;
+                    case 9:
+                        updateAccountHolderName();
+                        break;
+                    case 10:
+                        exitSystem();
+                        running = false;
+                        break;
+                }
+                
+                // Pause after each operation
+                if (running) {
+                    System.out.print("\nPress Enter to continue...");
+                    scanner.nextLine();
+                    scanner.nextLine(); // Double call to clear buffer
+                }
+                
+            } catch (Exception e) {
+                System.out.println(RED + "\n⚠ An unexpected error occurred: " + e.getMessage() + RESET);
+                System.out.println("Please try again.");
+                scanner.nextLine(); // Clear buffer
             }
         }
         
         scanner.close();
     }
     
-    // Display welcome banner
+    /**
+     * Displays welcome banner
+     */
     private static void displayWelcomeBanner() {
-        System.out.println("\n" + "🌟".repeat(55));
-        System.out.println("          BANK ACCOUNT MANAGEMENT SYSTEM");
-        System.out.println("🌟".repeat(55));
-        System.out.println("\nA Java OOP Project by Obakeng Phale");
-        System.out.println("Day 4: Transaction History & Account Search Implemented");
-        System.out.println("-".repeat(55));
+        System.out.println(CYAN + BOLD + "\n" + "✨".repeat(65));
+        System.out.println("              BANK ACCOUNT MANAGEMENT SYSTEM v1.0");
+        System.out.println("✨".repeat(65));
+        System.out.println("\n             A Complete Java OOP Project");
+        System.out.println("                by Obakeng Phale" + RESET);
+        System.out.println("\n" + "-".repeat(65));
+        System.out.println(YELLOW + "Features:" + RESET);
+        System.out.println("✓ Complete account management with validation");
+        System.out.println("✓ Transaction history tracking");
+        System.out.println("✓ Secure money transfers between accounts");
+        System.out.println("✓ Account search and filtering");
+        System.out.println("✓ Professional error handling");
+        System.out.println("-".repeat(65));
     }
     
-    // Initialize with some test accounts
+    /**
+     * Initializes test accounts with sample data
+     */
     private static void initializeTestAccounts() {
-        accounts.add(new Account("John Doe", 5000.00));
-        accounts.add(new Account("Jane Smith", 10000.00));
-        accounts.add(new Account("Bob Johnson", 7500.00));
-        accounts.add(new Account("Alice Brown", 12000.00));
-        accounts.add(new Account("Charlie Wilson", 3000.00));
-        
-        // Add some test transactions
-        accounts.get(0).deposit(1000);
-        accounts.get(0).withdraw(500);
-        accounts.get(1).deposit(2000);
-        accounts.get(2).withdraw(1000);
-        
-        System.out.println("\n✓ 5 test accounts initialized with sample transactions");
+        try {
+            accounts.add(new Account("John Doe", 5000.00));
+            accounts.add(new Account("Jane Smith", 10000.00));
+            accounts.add(new Account("Robert Johnson", 7500.00));
+            accounts.add(new Account("Alice Brown", 12000.00));
+            accounts.add(new Account("Charlie Wilson", 3000.00));
+            
+            // Add sample transactions
+            accounts.get(0).deposit(1000);
+            accounts.get(0).withdraw(500);
+            accounts.get(1).deposit(2000);
+            accounts.get(2).withdraw(1000);
+            accounts.get(0).transfer(accounts.get(1), 500);
+            
+            System.out.println(GREEN + "✓ 5 test accounts initialized with sample transactions" + RESET);
+            
+        } catch (Exception e) {
+            System.out.println(RED + "✗ Error initializing test accounts: " + e.getMessage() + RESET);
+        }
     }
     
-    // Method to create a new account
+    /**
+     * Creates a new account with validation
+     */
     private static void createNewAccount() {
-        System.out.println("\n" + "=".repeat(40));
-        System.out.println("      CREATE NEW ACCOUNT");
-        System.out.println("=".repeat(40));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("           CREATE NEW ACCOUNT");
+        System.out.println("=".repeat(50) + RESET);
         
-        System.out.print("Enter account holder name: ");
-        scanner.nextLine(); // Clear buffer
-        String name = scanner.nextLine().trim();
-        
-        if(name.isEmpty()) {
-            System.out.println("✗ Account holder name cannot be empty");
-            return;
+        try {
+            System.out.print("Enter account holder name: ");
+            scanner.nextLine(); // Clear buffer
+            String name = scanner.nextLine().trim();
+            
+            if (name.isEmpty()) {
+                throw new IllegalArgumentException("Name cannot be empty");
+            }
+            
+            double initialDeposit = getDoubleInput("Enter initial deposit amount: R", 0, 1000000);
+            
+            Account newAccount = new Account(name, initialDeposit);
+            accounts.add(newAccount);
+            
+            System.out.println(GREEN + "\n" + "✓".repeat(50));
+            System.out.println("      ACCOUNT CREATED SUCCESSFULLY!");
+            System.out.println("✓".repeat(50) + RESET);
+            System.out.println("Account Number: " + newAccount.getAccountNumber());
+            System.out.println("Holder Name: " + newAccount.getHolderName());
+            System.out.printf("Initial Balance: R%,.2f%n", newAccount.getBalance());
+            
+        } catch (IllegalArgumentException e) {
+            System.out.println(RED + "✗ Account creation failed: " + e.getMessage() + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + "✗ Unexpected error: " + e.getMessage() + RESET);
         }
-        
-        double initialDeposit = getDoubleInput("Enter initial deposit amount: R");
-        
-        if(initialDeposit < 0) {
-            System.out.println("✗ Initial deposit cannot be negative");
-            return;
-        }
-        
-        Account newAccount = new Account(name, initialDeposit);
-        accounts.add(newAccount);
-        
-        System.out.println("\n" + "✓".repeat(40));
-        System.out.println("      ACCOUNT CREATED SUCCESSFULLY!");
-        System.out.println("✓".repeat(40));
-        System.out.println("Account Number: " + newAccount.getAccountNumber());
-        System.out.println("Holder Name: " + newAccount.getHolderName());
-        System.out.println("Initial Balance: R" + String.format("%.2f", newAccount.getBalance()));
     }
     
-    // Method to view all accounts
+    /**
+     * Displays all accounts in formatted table
+     */
     private static void viewAllAccounts() {
-        System.out.println("\n" + "=".repeat(70));
-        System.out.println("                      ALL ACCOUNTS");
-        System.out.println("=".repeat(70));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(80));
+        System.out.println("                          ALL ACCOUNTS");
+        System.out.println("=".repeat(80) + RESET);
         
-        if(accounts.isEmpty()) {
-            System.out.println("No accounts found.");
+        if (accounts.isEmpty()) {
+            System.out.println(YELLOW + "No accounts found in the system." + RESET);
             return;
         }
         
         System.out.println("Total Accounts: " + accounts.size());
-        System.out.println("-".repeat(70));
-        System.out.println(String.format("%-15s %-20s %-12s %-10s", 
-            "Account No.", "Holder Name", "Balance", "Transactions"));
-        System.out.println("-".repeat(70));
+        System.out.println("-".repeat(80));
+        System.out.printf("%-15s %-25s %-20s %-15s%n", 
+            "Account No.", "Holder Name", "Balance", "Transactions");
+        System.out.println("-".repeat(80));
         
-        for(Account acc : accounts) {
+        for (Account acc : accounts) {
             acc.displayAccountSummary();
         }
         
-        System.out.println("-".repeat(70));
+        System.out.println("-".repeat(80));
         
-        // Calculate and display total bank balance
+        // Calculate totals
         double totalBalance = 0;
         int totalTransactions = 0;
-        for(Account acc : accounts) {
+        for (Account acc : accounts) {
             totalBalance += acc.getBalance();
             totalTransactions += acc.getTransactionHistory().size();
         }
         
-        System.out.println("Total Bank Balance: R" + String.format("%.2f", totalBalance));
-        System.out.println("Total Transactions: " + totalTransactions);
+        System.out.printf(GREEN + "Total Bank Balance: R%,.2f%n" + RESET, totalBalance);
+        System.out.printf("Total Transactions: %,d%n", totalTransactions);
     }
     
-    // NEW: Method to search account by name (Day 4 Feature)
+    /**
+     * Searches accounts by name (partial match)
+     */
     private static void searchAccountByName() {
-        System.out.println("\n" + "=".repeat(40));
-        System.out.println("      SEARCH ACCOUNT BY NAME");
-        System.out.println("=".repeat(40));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("         SEARCH ACCOUNTS BY NAME");
+        System.out.println("=".repeat(50) + RESET);
         
         System.out.print("Enter name to search: ");
         scanner.nextLine(); // Clear buffer
         String searchName = scanner.nextLine().trim().toLowerCase();
         
-        if(searchName.isEmpty()) {
-            System.out.println("✗ Search name cannot be empty");
+        if (searchName.isEmpty() || searchName.length() < 2) {
+            System.out.println(RED + "✗ Search term must be at least 2 characters" + RESET);
             return;
         }
         
         ArrayList<Account> searchResults = new ArrayList<>();
-        
-        for(Account acc : accounts) {
-            if(acc.getHolderName().toLowerCase().contains(searchName)) {
+        for (Account acc : accounts) {
+            if (acc.getHolderName().toLowerCase().contains(searchName)) {
                 searchResults.add(acc);
             }
         }
         
-        if(searchResults.isEmpty()) {
-            System.out.println("\n✗ No accounts found matching: '" + searchName + "'");
+        if (searchResults.isEmpty()) {
+            System.out.println(YELLOW + "\nNo accounts found matching: '" + searchName + "'" + RESET);
             return;
         }
         
-        System.out.println("\n✓ Found " + searchResults.size() + " account(s) matching: '" + searchName + "'");
-        System.out.println("-".repeat(70));
-        System.out.println(String.format("%-15s %-20s %-12s %-10s", 
-            "Account No.", "Holder Name", "Balance", "Transactions"));
-        System.out.println("-".repeat(70));
+        System.out.println(GREEN + "\n✓ Found " + searchResults.size() + " account(s) matching: '" + searchName + "'" + RESET);
+        System.out.println("-".repeat(80));
+        System.out.printf("%-15s %-25s %-20s %-15s%n", 
+            "Account No.", "Holder Name", "Balance", "Transactions");
+        System.out.println("-".repeat(80));
         
-        for(Account acc : searchResults) {
+        for (Account acc : searchResults) {
             acc.displayAccountSummary();
         }
         
-        System.out.println("-".repeat(70));
+        System.out.println("-".repeat(80));
         
-        // Option to view details of a specific account
-        if(searchResults.size() == 1) {
+        // Option to view details
+        if (searchResults.size() == 1) {
             System.out.print("\nView details of this account? (yes/no): ");
             String response = scanner.nextLine().toLowerCase();
-            if(response.equals("yes") || response.equals("y")) {
+            if (response.equals("yes") || response.equals("y")) {
                 searchResults.get(0).displayAccountInfo();
             }
         }
     }
     
-    // Method to deposit money
+    /**
+     * Deposits money into an account
+     */
     private static void depositMoney() {
-        System.out.println("\n" + "=".repeat(35));
-        System.out.println("         DEPOSIT MONEY");
-        System.out.println("=".repeat(35));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(40));
+        System.out.println("            DEPOSIT MONEY");
+        System.out.println("=".repeat(40) + RESET);
         
         Account account = findAccountByNumber();
-        if(account == null) {
-            System.out.println("✗ Account not found");
-            return;
+        if (account == null) return;
+        
+        account.checkBalance();
+        double amount = getDoubleInput("\nEnter deposit amount: R", 0.01, 1000000);
+        
+        if (!account.deposit(amount)) {
+            System.out.println(RED + "✗ Deposit operation failed" + RESET);
         }
-        
-        System.out.println("Account Holder: " + account.getHolderName());
-        System.out.println("Current Balance: R" + String.format("%.2f", account.getBalance()));
-        
-        double amount = getDoubleInput("\nEnter deposit amount: R");
-        
-        // Validate amount
-        if(amount <= 0) {
-            System.out.println("✗ Deposit amount must be positive");
-            return;
-        }
-        
-        if(amount > 1000000) { // Limit for safety
-            System.out.println("✗ Deposit amount exceeds maximum limit of R1,000,000");
-            return;
-        }
-        
-        account.deposit(amount);
     }
     
-    // Method to withdraw money
+    /**
+     * Withdraws money from an account
+     */
     private static void withdrawMoney() {
-        System.out.println("\n" + "=".repeat(35));
-        System.out.println("        WITHDRAW MONEY");
-        System.out.println("=".repeat(35));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(40));
+        System.out.println("           WITHDRAW MONEY");
+        System.out.println("=".repeat(40) + RESET);
         
         Account account = findAccountByNumber();
-        if(account == null) {
-            System.out.println("✗ Account not found");
-            return;
+        if (account == null) return;
+        
+        account.checkBalance();
+        double amount = getDoubleInput("\nEnter withdrawal amount: R", 0.01, 50000);
+        
+        if (!account.withdraw(amount)) {
+            System.out.println(RED + "✗ Withdrawal operation failed" + RESET);
         }
-        
-        System.out.println("Account Holder: " + account.getHolderName());
-        System.out.println("Current Balance: R" + String.format("%.2f", account.getBalance()));
-        
-        double amount = getDoubleInput("\nEnter withdrawal amount: R");
-        
-        // Enhanced validation
-        if(amount <= 0) {
-            System.out.println("✗ Withdrawal amount must be positive");
-            return;
-        }
-        
-        if(amount > 50000) { // Daily withdrawal limit
-            System.out.println("✗ Withdrawal amount exceeds daily limit of R50,000");
-            return;
-        }
-        
-        account.withdraw(amount);
     }
     
-    // Method to check account balance
+    /**
+     * Checks account balance
+     */
     private static void checkAccountBalance() {
-        System.out.println("\n" + "=".repeat(35));
-        System.out.println("     CHECK ACCOUNT BALANCE");
-        System.out.println("=".repeat(35));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(40));
+        System.out.println("        CHECK ACCOUNT BALANCE");
+        System.out.println("=".repeat(40) + RESET);
         
         Account account = findAccountByNumber();
-        if(account == null) {
-            System.out.println("✗ Account not found");
-            return;
-        }
+        if (account == null) return;
         
         account.checkBalance();
     }
     
-    // Method to transfer money between accounts
+    /**
+     * Transfers money between accounts
+     */
     private static void transferMoney() {
-        System.out.println("\n" + "=".repeat(45));
-        System.out.println("         TRANSFER MONEY");
-        System.out.println("=".repeat(45));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("           TRANSFER MONEY");
+        System.out.println("=".repeat(50) + RESET);
         
         System.out.println("\n--- SENDER ACCOUNT ---");
         Account sender = findAccountByNumber();
-        if(sender == null) {
-            System.out.println("✗ Sender account not found");
-            return;
-        }
+        if (sender == null) return;
         
         System.out.println("\n--- RECIPIENT ACCOUNT ---");
         Account recipient = findAccountByNumber();
-        if(recipient == null) {
-            System.out.println("✗ Recipient account not found");
+        if (recipient == null) return;
+        
+        // Validate accounts are different
+        if (sender.getAccountNumber() == recipient.getAccountNumber()) {
+            System.out.println(RED + "✗ Cannot transfer to the same account" + RESET);
             return;
         }
         
-        // Check if sender and recipient are the same
-        if(sender.getAccountNumber() == recipient.getAccountNumber()) {
-            System.out.println("✗ Cannot transfer to the same account");
-            return;
-        }
+        sender.checkBalance();
+        recipient.checkBalance();
         
-        System.out.println("\n" + "-".repeat(45));
-        System.out.println("TRANSFER DETAILS:");
-        System.out.println("-".repeat(45));
-        System.out.println("Sender: " + sender.getHolderName() + 
-                          " (Acc: " + sender.getAccountNumber() + ")");
-        System.out.println("  Current Balance: R" + String.format("%.2f", sender.getBalance()));
-        System.out.println("-".repeat(45));
-        System.out.println("Recipient: " + recipient.getHolderName() + 
-                          " (Acc: " + recipient.getAccountNumber() + ")");
-        System.out.println("  Current Balance: R" + String.format("%.2f", recipient.getBalance()));
-        System.out.println("-".repeat(45));
+        double amount = getDoubleInput("\nEnter transfer amount: R", 0.01, 100000);
         
-        double amount = getDoubleInput("\nEnter transfer amount: R");
-        
-        // Enhanced validation
-        if(amount <= 0) {
-            System.out.println("✗ Transfer amount must be positive");
-            return;
-        }
-        
-        if(amount > 100000) { // Transfer limit
-            System.out.println("✗ Transfer amount exceeds limit of R100,000");
-            return;
-        }
-        
-        // Confirm transfer
-        System.out.print("\nConfirm transfer of R" + String.format("%.2f", amount) + "? (yes/no): ");
+        // Get confirmation
+        System.out.print("\nConfirm transfer? (yes/no): ");
         scanner.nextLine(); // Clear buffer
-        String confirmation = scanner.nextLine().toLowerCase();
+        String confirmation = scanner.nextLine().trim().toLowerCase();
         
-        if(confirmation.equals("yes") || confirmation.equals("y")) {
-            sender.transfer(recipient, amount);
+        if (confirmation.equals("yes") || confirmation.equals("y")) {
+            if (!sender.transfer(recipient, amount)) {
+                System.out.println(RED + "✗ Transfer operation failed" + RESET);
+            }
         } else {
-            System.out.println("✗ Transfer cancelled by user");
+            System.out.println(YELLOW + "✗ Transfer cancelled by user" + RESET);
         }
     }
     
-    // NEW: Method to view transaction history (Day 4 Feature)
+    /**
+     * Views transaction history for an account
+     */
     private static void viewTransactionHistory() {
-        System.out.println("\n" + "=".repeat(40));
-        System.out.println("     VIEW TRANSACTION HISTORY");
-        System.out.println("=".repeat(40));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("       VIEW TRANSACTION HISTORY");
+        System.out.println("=".repeat(50) + RESET);
         
         Account account = findAccountByNumber();
-        if(account == null) {
-            System.out.println("✗ Account not found");
+        if (account == null) return;
+        
+        account.displayTransactionHistory();
+    }
+    
+    /**
+     * Updates account holder name
+     */
+    private static void updateAccountHolderName() {
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("       UPDATE ACCOUNT HOLDER NAME");
+        System.out.println("=".repeat(50) + RESET);
+        
+        Account account = findAccountByNumber();
+        if (account == null) return;
+        
+        System.out.println("Current Account Holder: " + account.getHolderName());
+        System.out.print("Enter new account holder name: ");
+        scanner.nextLine(); // Clear buffer
+        String newName = scanner.nextLine().trim();
+        
+        if (newName.isEmpty()) {
+            System.out.println(RED + "✗ Name cannot be empty" + RESET);
             return;
         }
         
-        account.displayTransactionHistory();
-        
-        // Additional options
-        System.out.println("\n" + "-".repeat(40));
-        System.out.println("Additional Options:");
-        System.out.println("1. View account information");
-        System.out.println("2. Return to main menu");
-        System.out.print("Select option: ");
-        
-        int option = getIntInput("");
-        
-        if(option == 1) {
-            account.displayAccountInfo();
+        try {
+            String oldName = account.getHolderName();
+            account.setHolderName(newName);
+            System.out.println(GREEN + "✓ Account holder name updated successfully!" + RESET);
+            System.out.println("Changed from: " + oldName);
+            System.out.println("Changed to: " + account.getHolderName());
+        } catch (IllegalArgumentException e) {
+            System.out.println(RED + "✗ Update failed: " + e.getMessage() + RESET);
         }
     }
     
-    // NEW: Exit system method
+    /**
+     * Exits the system with summary
+     */
     private static void exitSystem() {
-        System.out.println("\n" + "=".repeat(60));
-        System.out.println("              SYSTEM SUMMARY");
-        System.out.println("=".repeat(60));
+        System.out.println(CYAN + BOLD + "\n" + "=".repeat(65));
+        System.out.println("               SYSTEM TERMINATION SUMMARY");
+        System.out.println("=".repeat(65) + RESET);
         
-        System.out.println("Total Accounts: " + accounts.size());
+        System.out.println("Total Accounts in System: " + accounts.size());
         
         double totalBalance = 0;
         int totalTransactions = 0;
-        for(Account acc : accounts) {
+        for (Account acc : accounts) {
             totalBalance += acc.getBalance();
             totalTransactions += acc.getTransactionHistory().size();
         }
         
-        System.out.println("Total Bank Balance: R" + String.format("%.2f", totalBalance));
-        System.out.println("Total Transactions: " + totalTransactions);
-        System.out.println("-".repeat(60));
-        System.out.println("\nThank you for using our banking system!");
-        System.out.println("Goodbye! 👋");
-        System.out.println("=".repeat(60));
+        System.out.printf("Total Bank Balance: R%,.2f%n", totalBalance);
+        System.out.println("Total Transactions Processed: " + totalTransactions);
+        System.out.println("-".repeat(65));
+        
+        System.out.println(YELLOW + BOLD + "\nThank you for using Bank Account Management System!" + RESET);
+        System.out.println("Developed by: Obakeng Phale");
+        System.out.println("GitHub: https://github.com/yourusername/bank-account-management-system");
+        System.out.println(CYAN + BOLD + "\n" + "✨".repeat(65) + RESET);
     }
     
-    // Helper method to find account by number
+    /**
+     * Finds account by account number
+     * @return Account if found, null otherwise
+     */
     private static Account findAccountByNumber() {
         System.out.print("Enter account number: ");
         
-        while(!scanner.hasNextLong()) {
-            System.out.println("✗ Please enter a valid account number (12 digits)");
-            System.out.print("Enter account number: ");
-            scanner.next();
+        try {
+            long accountNumber = scanner.nextLong();
+            
+            for (Account acc : accounts) {
+                if (acc.getAccountNumber() == accountNumber) {
+                    return acc;
+                }
+            }
+            
+            System.out.println(RED + "✗ Account with number " + accountNumber + " not found" + RESET);
+            return null;
+            
+        } catch (InputMismatchException e) {
+            System.out.println(RED + "✗ Invalid account number format. Please enter a 12-digit number." + RESET);
+            scanner.next(); // Clear invalid input
+            return null;
         }
-        
-        long accountNumber = scanner.nextLong();
-        
-        for(Account acc : accounts) {
-            if(acc.getAccountNumber() == accountNumber) {
-                return acc;
+    }
+    
+    /**
+     * Gets integer input with validation
+     * @param prompt Input prompt
+     * @param min Minimum value (inclusive)
+     * @param max Maximum value (inclusive)
+     * @return Validated integer
+     */
+    private static int getIntInput(String prompt, int min, int max) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                int value = scanner.nextInt();
+                
+                if (value < min || value > max) {
+                    System.out.printf(RED + "✗ Please enter a number between %d and %d%n" + RESET, min, max);
+                    continue;
+                }
+                
+                return value;
+                
+            } catch (InputMismatchException e) {
+                System.out.println(RED + "✗ Invalid input. Please enter a valid number." + RESET);
+                scanner.next(); // Clear invalid input
             }
         }
-        
-        System.out.println("✗ Account with number " + accountNumber + " not found");
-        return null;
     }
     
-    // Helper method to get integer input with validation
-    private static int getIntInput(String prompt) {
-        System.out.print(prompt);
-        while(!scanner.hasNextInt()) {
-            System.out.println("✗ Please enter a valid number");
-            System.out.print(prompt);
-            scanner.next();
+    /**
+     * Gets double input with validation
+     * @param prompt Input prompt
+     * @param min Minimum value (inclusive)
+     * @param max Maximum value (inclusive)
+     * @return Validated double
+     */
+    private static double getDoubleInput(String prompt, double min, double max) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                double value = scanner.nextDouble();
+                
+                if (value < min || value > max) {
+                    System.out.printf(RED + "✗ Please enter an amount between R%.2f and R%.2f%n" + RESET, min, max);
+                    continue;
+                }
+                
+                return Math.round(value * 100.0) / 100.0; // Round to 2 decimal places
+                
+            } catch (InputMismatchException e) {
+                System.out.println(RED + "✗ Invalid input. Please enter a valid amount." + RESET);
+                scanner.next(); // Clear invalid input
+            }
         }
-        int value = scanner.nextInt();
-        return value;
-    }
-    
-    // Helper method to get double input with validation
-    private static double getDoubleInput(String prompt) {
-        System.out.print(prompt);
-        while(!scanner.hasNextDouble()) {
-            System.out.println("✗ Please enter a valid amount");
-            System.out.print(prompt);
-            scanner.next();
-        }
-        double value = scanner.nextDouble();
-        return value;
     }
 }
