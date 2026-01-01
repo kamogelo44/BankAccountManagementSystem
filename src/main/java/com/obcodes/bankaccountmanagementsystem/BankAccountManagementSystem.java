@@ -6,21 +6,13 @@ import java.util.Scanner;
 
 /**
  * Main banking system application
- * Demonstrates complete OOP system with menu-driven interface
+ * Simplified version without color codes for better readability
  * @author Obakeng Phale
  */
 public class BankAccountManagementSystem {
     
     private static final ArrayList<Account> accounts = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
-    
-    // Color codes for better UI 
-    private static final String RESET = "\u001B[0m";
-    private static final String GREEN = "\u001B[32m";
-    private static final String RED = "\u001B[31m";
-    private static final String YELLOW = "\u001B[33m";
-    private static final String CYAN = "\u001B[36m";
-    private static final String BOLD = "\u001B[1m";
     
     public static void main(String[] args) {
         displayWelcomeBanner();
@@ -30,7 +22,7 @@ public class BankAccountManagementSystem {
         while (running) {
             try {
                 Menu.displayMainMenu();
-                int choice = getIntInput("Enter your choice (1-10): ", 1, 10);
+                int choice = getIntInput("Enter your choice (1-9): ", 1, 9);
                 
                 switch (choice) {
                     case 1:
@@ -58,9 +50,6 @@ public class BankAccountManagementSystem {
                         viewTransactionHistory();
                         break;
                     case 9:
-                        updateAccountHolderName();
-                        break;
-                    case 10:
                         exitSystem();
                         running = false;
                         break;
@@ -70,13 +59,17 @@ public class BankAccountManagementSystem {
                 if (running) {
                     System.out.print("\nPress Enter to continue...");
                     scanner.nextLine();
-                    scanner.nextLine(); // Double call to clear buffer
+                    if (scanner.hasNextLine()) {
+                        scanner.nextLine(); // Double call to clear buffer
+                    }
                 }
                 
             } catch (Exception e) {
-                System.out.println(RED + "\n⚠ An unexpected error occurred: " + e.getMessage() + RESET);
+                System.out.println("\n[ERROR] An unexpected error occurred: " + e.getMessage());
                 System.out.println("Please try again.");
-                scanner.nextLine(); // Clear buffer
+                if (scanner.hasNextLine()) {
+                    scanner.nextLine(); // Clear buffer
+                }
             }
         }
         
@@ -87,19 +80,19 @@ public class BankAccountManagementSystem {
      * Displays welcome banner
      */
     private static void displayWelcomeBanner() {
-        System.out.println(CYAN + BOLD + "\n" + "✨".repeat(65));
-        System.out.println("              BANK ACCOUNT MANAGEMENT SYSTEM v1.0");
-        System.out.println("✨".repeat(65));
-        System.out.println("\n             A Complete Java OOP Project");
-        System.out.println("                by Obakeng Phale" + RESET);
-        System.out.println("\n" + "-".repeat(65));
-        System.out.println(YELLOW + "Features:" + RESET);
-        System.out.println("✓ Complete account management with validation");
-        System.out.println("✓ Transaction history tracking");
-        System.out.println("✓ Secure money transfers between accounts");
-        System.out.println("✓ Account search and filtering");
-        System.out.println("✓ Professional error handling");
-        System.out.println("-".repeat(65));
+        System.out.println("\n==================================================");
+        System.out.println("       BANK ACCOUNT MANAGEMENT SYSTEM v1.0");
+        System.out.println("==================================================");
+        System.out.println("\n           A Complete Java OOP Project");
+        System.out.println("              by Obakeng Phale");
+        System.out.println("\n--------------------------------------------------");
+        System.out.println("Features:");
+        System.out.println("- Complete account management with validation");
+        System.out.println("- Transaction history tracking");
+        System.out.println("- Secure money transfers between accounts");
+        System.out.println("- Account search and filtering");
+        System.out.println("- Professional error handling");
+        System.out.println("--------------------------------------------------");
     }
     
     /**
@@ -120,10 +113,10 @@ public class BankAccountManagementSystem {
             accounts.get(2).withdraw(1000);
             accounts.get(0).transfer(accounts.get(1), 500);
             
-            System.out.println(GREEN + "✓ 5 test accounts initialized with sample transactions" + RESET);
+            System.out.println("[SUCCESS] 5 test accounts initialized with sample transactions");
             
         } catch (Exception e) {
-            System.out.println(RED + "✗ Error initializing test accounts: " + e.getMessage() + RESET);
+            System.out.println("[ERROR] Error initializing test accounts: " + e.getMessage());
         }
     }
     
@@ -131,9 +124,9 @@ public class BankAccountManagementSystem {
      * Creates a new account with validation
      */
     private static void createNewAccount() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
-        System.out.println("           CREATE NEW ACCOUNT");
-        System.out.println("=".repeat(50) + RESET);
+        System.out.println("\n==========================================");
+        System.out.println("         CREATE NEW ACCOUNT");
+        System.out.println("==========================================");
         
         try {
             System.out.print("Enter account holder name: ");
@@ -149,17 +142,16 @@ public class BankAccountManagementSystem {
             Account newAccount = new Account(name, initialDeposit);
             accounts.add(newAccount);
             
-            System.out.println(GREEN + "\n" + "✓".repeat(50));
-            System.out.println("      ACCOUNT CREATED SUCCESSFULLY!");
-            System.out.println("✓".repeat(50) + RESET);
+            System.out.println("\n[SUCCESS] ACCOUNT CREATED SUCCESSFULLY!");
+            System.out.println("==========================================");
             System.out.println("Account Number: " + newAccount.getAccountNumber());
             System.out.println("Holder Name: " + newAccount.getHolderName());
             System.out.printf("Initial Balance: R%,.2f%n", newAccount.getBalance());
             
         } catch (IllegalArgumentException e) {
-            System.out.println(RED + "✗ Account creation failed: " + e.getMessage() + RESET);
+            System.out.println("[ERROR] Account creation failed: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println(RED + "✗ Unexpected error: " + e.getMessage() + RESET);
+            System.out.println("[ERROR] Unexpected error: " + e.getMessage());
         }
     }
     
@@ -167,26 +159,26 @@ public class BankAccountManagementSystem {
      * Displays all accounts in formatted table
      */
     private static void viewAllAccounts() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(80));
-        System.out.println("                          ALL ACCOUNTS");
-        System.out.println("=".repeat(80) + RESET);
+        System.out.println("\n==================================================");
+        System.out.println("                 ALL ACCOUNTS");
+        System.out.println("==================================================");
         
         if (accounts.isEmpty()) {
-            System.out.println(YELLOW + "No accounts found in the system." + RESET);
+            System.out.println("No accounts found in the system.");
             return;
         }
         
         System.out.println("Total Accounts: " + accounts.size());
-        System.out.println("-".repeat(80));
+        System.out.println("--------------------------------------------------");
         System.out.printf("%-15s %-25s %-20s %-15s%n", 
             "Account No.", "Holder Name", "Balance", "Transactions");
-        System.out.println("-".repeat(80));
+        System.out.println("--------------------------------------------------");
         
         for (Account acc : accounts) {
             acc.displayAccountSummary();
         }
         
-        System.out.println("-".repeat(80));
+        System.out.println("--------------------------------------------------");
         
         // Calculate totals
         double totalBalance = 0;
@@ -196,7 +188,7 @@ public class BankAccountManagementSystem {
             totalTransactions += acc.getTransactionHistory().size();
         }
         
-        System.out.printf(GREEN + "Total Bank Balance: R%,.2f%n" + RESET, totalBalance);
+        System.out.printf("Total Bank Balance: R%,.2f%n", totalBalance);
         System.out.printf("Total Transactions: %,d%n", totalTransactions);
     }
     
@@ -204,16 +196,16 @@ public class BankAccountManagementSystem {
      * Searches accounts by name (partial match)
      */
     private static void searchAccountByName() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
-        System.out.println("         SEARCH ACCOUNTS BY NAME");
-        System.out.println("=".repeat(50) + RESET);
+        System.out.println("\n==========================================");
+        System.out.println("       SEARCH ACCOUNTS BY NAME");
+        System.out.println("==========================================");
         
         System.out.print("Enter name to search: ");
         scanner.nextLine(); // Clear buffer
         String searchName = scanner.nextLine().trim().toLowerCase();
         
         if (searchName.isEmpty() || searchName.length() < 2) {
-            System.out.println(RED + "✗ Search term must be at least 2 characters" + RESET);
+            System.out.println("[ERROR] Search term must be at least 2 characters");
             return;
         }
         
@@ -225,21 +217,21 @@ public class BankAccountManagementSystem {
         }
         
         if (searchResults.isEmpty()) {
-            System.out.println(YELLOW + "\nNo accounts found matching: '" + searchName + "'" + RESET);
+            System.out.println("\nNo accounts found matching: '" + searchName + "'");
             return;
         }
         
-        System.out.println(GREEN + "\n✓ Found " + searchResults.size() + " account(s) matching: '" + searchName + "'" + RESET);
-        System.out.println("-".repeat(80));
+        System.out.println("\n[SUCCESS] Found " + searchResults.size() + " account(s) matching: '" + searchName + "'");
+        System.out.println("--------------------------------------------------");
         System.out.printf("%-15s %-25s %-20s %-15s%n", 
             "Account No.", "Holder Name", "Balance", "Transactions");
-        System.out.println("-".repeat(80));
+        System.out.println("--------------------------------------------------");
         
         for (Account acc : searchResults) {
             acc.displayAccountSummary();
         }
         
-        System.out.println("-".repeat(80));
+        System.out.println("--------------------------------------------------");
         
         // Option to view details
         if (searchResults.size() == 1) {
@@ -255,9 +247,9 @@ public class BankAccountManagementSystem {
      * Deposits money into an account
      */
     private static void depositMoney() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(40));
+        System.out.println("\n==========================================");
         System.out.println("            DEPOSIT MONEY");
-        System.out.println("=".repeat(40) + RESET);
+        System.out.println("==========================================");
         
         Account account = findAccountByNumber();
         if (account == null) return;
@@ -266,7 +258,7 @@ public class BankAccountManagementSystem {
         double amount = getDoubleInput("\nEnter deposit amount: R", 0.01, 1000000);
         
         if (!account.deposit(amount)) {
-            System.out.println(RED + "✗ Deposit operation failed" + RESET);
+            System.out.println("[ERROR] Deposit operation failed");
         }
     }
     
@@ -274,9 +266,9 @@ public class BankAccountManagementSystem {
      * Withdraws money from an account
      */
     private static void withdrawMoney() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(40));
+        System.out.println("\n==========================================");
         System.out.println("           WITHDRAW MONEY");
-        System.out.println("=".repeat(40) + RESET);
+        System.out.println("==========================================");
         
         Account account = findAccountByNumber();
         if (account == null) return;
@@ -285,7 +277,7 @@ public class BankAccountManagementSystem {
         double amount = getDoubleInput("\nEnter withdrawal amount: R", 0.01, 50000);
         
         if (!account.withdraw(amount)) {
-            System.out.println(RED + "✗ Withdrawal operation failed" + RESET);
+            System.out.println("[ERROR] Withdrawal operation failed");
         }
     }
     
@@ -293,9 +285,9 @@ public class BankAccountManagementSystem {
      * Checks account balance
      */
     private static void checkAccountBalance() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(40));
+        System.out.println("\n==========================================");
         System.out.println("        CHECK ACCOUNT BALANCE");
-        System.out.println("=".repeat(40) + RESET);
+        System.out.println("==========================================");
         
         Account account = findAccountByNumber();
         if (account == null) return;
@@ -307,9 +299,9 @@ public class BankAccountManagementSystem {
      * Transfers money between accounts
      */
     private static void transferMoney() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("\n==========================================");
         System.out.println("           TRANSFER MONEY");
-        System.out.println("=".repeat(50) + RESET);
+        System.out.println("==========================================");
         
         System.out.println("\n--- SENDER ACCOUNT ---");
         Account sender = findAccountByNumber();
@@ -321,7 +313,7 @@ public class BankAccountManagementSystem {
         
         // Validate accounts are different
         if (sender.getAccountNumber() == recipient.getAccountNumber()) {
-            System.out.println(RED + "✗ Cannot transfer to the same account" + RESET);
+            System.out.println("[ERROR] Cannot transfer to the same account");
             return;
         }
         
@@ -337,10 +329,10 @@ public class BankAccountManagementSystem {
         
         if (confirmation.equals("yes") || confirmation.equals("y")) {
             if (!sender.transfer(recipient, amount)) {
-                System.out.println(RED + "✗ Transfer operation failed" + RESET);
+                System.out.println("[ERROR] Transfer operation failed");
             }
         } else {
-            System.out.println(YELLOW + "✗ Transfer cancelled by user" + RESET);
+            System.out.println("[INFO] Transfer cancelled by user");
         }
     }
     
@@ -348,45 +340,31 @@ public class BankAccountManagementSystem {
      * Views transaction history for an account
      */
     private static void viewTransactionHistory() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
+        System.out.println("\n==========================================");
         System.out.println("       VIEW TRANSACTION HISTORY");
-        System.out.println("=".repeat(50) + RESET);
+        System.out.println("==========================================");
         
         Account account = findAccountByNumber();
         if (account == null) return;
         
         account.displayTransactionHistory();
-    }
-    
-    /**
-     * Updates account holder name
-     */
-    private static void updateAccountHolderName() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(50));
-        System.out.println("       UPDATE ACCOUNT HOLDER NAME");
-        System.out.println("=".repeat(50) + RESET);
         
-        Account account = findAccountByNumber();
-        if (account == null) return;
-        
-        System.out.println("Current Account Holder: " + account.getHolderName());
-        System.out.print("Enter new account holder name: ");
-        scanner.nextLine(); // Clear buffer
-        String newName = scanner.nextLine().trim();
-        
-        if (newName.isEmpty()) {
-            System.out.println(RED + "✗ Name cannot be empty" + RESET);
-            return;
-        }
+        // Additional options
+        System.out.println("\n--------------------------------------------------");
+        System.out.println("Additional Options:");
+        System.out.println("1. View account information");
+        System.out.println("2. Return to main menu");
+        System.out.print("Select option: ");
         
         try {
-            String oldName = account.getHolderName();
-            account.setHolderName(newName);
-            System.out.println(GREEN + "✓ Account holder name updated successfully!" + RESET);
-            System.out.println("Changed from: " + oldName);
-            System.out.println("Changed to: " + account.getHolderName());
-        } catch (IllegalArgumentException e) {
-            System.out.println(RED + "✗ Update failed: " + e.getMessage() + RESET);
+            int option = scanner.nextInt();
+            scanner.nextLine(); // Clear buffer
+            
+            if (option == 1) {
+                account.displayAccountInfo();
+            }
+        } catch (InputMismatchException e) {
+            scanner.nextLine(); // Clear buffer
         }
     }
     
@@ -394,9 +372,9 @@ public class BankAccountManagementSystem {
      * Exits the system with summary
      */
     private static void exitSystem() {
-        System.out.println(CYAN + BOLD + "\n" + "=".repeat(65));
-        System.out.println("               SYSTEM TERMINATION SUMMARY");
-        System.out.println("=".repeat(65) + RESET);
+        System.out.println("\n==================================================");
+        System.out.println("           SYSTEM TERMINATION SUMMARY");
+        System.out.println("==================================================");
         
         System.out.println("Total Accounts in System: " + accounts.size());
         
@@ -409,12 +387,11 @@ public class BankAccountManagementSystem {
         
         System.out.printf("Total Bank Balance: R%,.2f%n", totalBalance);
         System.out.println("Total Transactions Processed: " + totalTransactions);
-        System.out.println("-".repeat(65));
+        System.out.println("--------------------------------------------------");
         
-        System.out.println(YELLOW + BOLD + "\nThank you for using Bank Account Management System!" + RESET);
+        System.out.println("\nThank you for using Bank Account Management System!");
         System.out.println("Developed by: Obakeng Phale");
-        System.out.println("GitHub: https://github.com/yourusername/bank-account-management-system");
-        System.out.println(CYAN + BOLD + "\n" + "✨".repeat(65) + RESET);
+        System.out.println("==================================================");
     }
     
     /**
@@ -433,11 +410,11 @@ public class BankAccountManagementSystem {
                 }
             }
             
-            System.out.println(RED + "✗ Account with number " + accountNumber + " not found" + RESET);
+            System.out.println("[ERROR] Account with number " + accountNumber + " not found");
             return null;
             
         } catch (InputMismatchException e) {
-            System.out.println(RED + "✗ Invalid account number format. Please enter a 12-digit number." + RESET);
+            System.out.println("[ERROR] Invalid account number format. Please enter a 12-digit number.");
             scanner.next(); // Clear invalid input
             return null;
         }
@@ -457,14 +434,14 @@ public class BankAccountManagementSystem {
                 int value = scanner.nextInt();
                 
                 if (value < min || value > max) {
-                    System.out.printf(RED + "✗ Please enter a number between %d and %d%n" + RESET, min, max);
+                    System.out.printf("[ERROR] Please enter a number between %d and %d%n", min, max);
                     continue;
                 }
                 
                 return value;
                 
             } catch (InputMismatchException e) {
-                System.out.println(RED + "✗ Invalid input. Please enter a valid number." + RESET);
+                System.out.println("[ERROR] Invalid input. Please enter a valid number.");
                 scanner.next(); // Clear invalid input
             }
         }
@@ -484,14 +461,14 @@ public class BankAccountManagementSystem {
                 double value = scanner.nextDouble();
                 
                 if (value < min || value > max) {
-                    System.out.printf(RED + "✗ Please enter an amount between R%.2f and R%.2f%n" + RESET, min, max);
+                    System.out.printf("[ERROR] Please enter an amount between R%.2f and R%.2f%n", min, max);
                     continue;
                 }
                 
                 return Math.round(value * 100.0) / 100.0; // Round to 2 decimal places
                 
             } catch (InputMismatchException e) {
-                System.out.println(RED + "✗ Invalid input. Please enter a valid amount." + RESET);
+                System.out.println("[ERROR] Invalid input. Please enter a valid amount.");
                 scanner.next(); // Clear invalid input
             }
         }
