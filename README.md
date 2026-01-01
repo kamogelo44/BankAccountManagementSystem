@@ -1,145 +1,264 @@
 # Bank Account Management System
 
-A Java project demonstrating Object-Oriented Programming concepts.
+A complete Java Object-Oriented Programming (OOP) project demonstrating core programming concepts with a practical banking application.
+
+##  Project Overview
+
+This project implements a fully-functional bank account management system that showcases essential OOP principles through a menu-driven console application. Developed over 5 days with incremental GitHub commits, it serves as an excellent portfolio piece for Java developers.
+
+##  Learning Objectives
+
+This project demonstrates:
+- **Classes and Objects**: Modeling real-world banking entities
+- **Encapsulation**: Data hiding with private fields and public methods
+- **ArrayList**: Dynamic collection management for multiple accounts
+- **Exception Handling**: Comprehensive error management
+- **Input Validation**: Robust user input verification
+- **Menu-driven Interface**: User-friendly console interaction
 
 ## Features
-- Account management with encapsulation
-- ArrayList for storing multiple accounts
-- Menu-driven interface
-- Deposit, withdraw, and transfer functionality
 
-## Technologies
-- Java
-- Apache NetBeans IDE
-- # Bank Account Management System
+### Account Management
+- Create new accounts with auto-generated 12-digit account numbers
+- View all accounts with detailed information
+- Search accounts by holder name (partial match)
+- Update account holder names
+- Automatic transaction history for all account changes
 
-## Day 3 Progress 
-### New Feature: Money Transfer Between Accounts
-**Complete Transfer Functionality Implemented:**
+### Banking Operations
+- **Deposit Money**: With validation and transaction limits
+- **Withdraw Money**: With balance verification and daily limits
+- **Check Balance**: Real-time account balance display
+- **Transfer Funds**: Secure transfers between accounts with rollback capability
 
-1. **Account.transfer() Method**
-   - Validates sender and recipient accounts
-   - Prevents same-account transfers
-   - Ensures sufficient funds
-   - Provides transaction rollback if deposit fails
-   - Displays detailed transfer confirmation
+### Transaction History
+- Complete record of all transactions
+- Timestamped entries with unique IDs
+- Transaction types: DEPOSIT, WITHDRAWAL, TRANSFER_IN, TRANSFER_OUT
+- Detailed transaction descriptions
 
-2. **User Interface Enhancements**
-   - New menu option (6) for money transfers
-   - Formatted account display with tables
-   - Transfer confirmation step
-   - Improved visual feedback with separators
+### Security & Validation
+- Input validation for all user entries
+- Transaction limits (deposit: R1M, withdrawal: R50K, transfer: R100K)
+- Account number verification
+- Name validation with character restrictions
+- Amount validation with decimal precision
 
-3. **Safety Features**
-   - User confirmation before completing transfer
-   - Balance verification display
-   - Transaction rollback capability
-   - Clear error messages for failed transfers
+### User Experience
+- Color-coded console output
+- Formatted tables and professional displays
+- Confirmation prompts for critical operations
+- Clear error messages with recovery suggestions
+- System pause between operations
 
-### Current Features Summary:
-- Account creation with auto-generated account numbers
-- Deposit money with validation
-- Withdraw money with balance checking
-- Check account balance
-- View all accounts in formatted table
-- **NEW** Transfer money between accounts
-- Input validation and error handling
-- Menu-driven interface with 7 options
-
-### Project Structure
+##  Project Structure
 src/
 ├── com/obcodes/bankaccountmanagementsystem/
-│ ├── Account.java # Complete with deposit, withdraw, transfer
-│ ├── BankAccountManagementSystem.java # Full banking operations
-│ └── Menu.java # Enhanced menu system
+│ ├── Account.java # Main account class with all operations
+│ ├── Transaction.java # Transaction record class
+│ ├── BankAccountManagementSystem.java # Main application with menu system
+│ └── Menu.java # Menu display class
 
-### Sample Transfer Output:
-=== TRANSFER INITIATED ===
-From: John Doe (Acc: 123456789012)
-To: Jane Smith (Acc: 987654321098)
-Amount: R500.00
-==============================
+## 🚀 How to Run
 
-✓ Withdrawal successful: R500.00
-Remaining balance: R4500.00
-✓ Deposit successful: R500.00
+### Prerequisites
+- Java Development Kit (JDK) 8 or higher
+- Command line terminal or IDE
 
-✓ TRANSFER COMPLETED SUCCESSFULLY
-===================================
-Sender (John Doe):
-New Balance: R4500.00
+### Compilation
+```bash
+# Navigate to src directory
+cd src
 
-Recipient (Jane Smith):
-New Balance: R10500.00
-===================================
+# Compile all Java files
+javac com/obcodes/bankaccountmanagementsystem/*.java
 
-## Coming Next (Day 4):
-- Transaction history tracking
-- Account search by name
-- Enhanced error handling
-- File persistence (optional)
-## Day 4 Progress ✅
-### Major New Features:
+# Run the application
+java com.obcodes.bankaccountmanagementsystem.BankAccountManagementSystem
 
-### 1. **Transaction History Tracking**
-- **NEW Transaction Class**: Stores transaction details with timestamp
-- **Complete History**: All deposits, withdrawals, and transfers are recorded
-- **Transaction Types**: DEPOSIT, WITHDRAWAL, TRANSFER_IN, TRANSFER_OUT
-- **Detailed View**: View full transaction history for any account
+Using an IDE (NetBeans/Eclipse/IntelliJ)
+Import the project as a Java application
+✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
+              BANK ACCOUNT MANAGEMENT SYSTEM v1.0
+✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨✨
 
-### 2. **Account Search by Name**
-- **Partial Match Search**: Case-insensitive name searching
-- **Multiple Results**: Displays all matching accounts
-- **Quick Details**: Option to view details of found accounts
+======================================================================
+                  BANKING SYSTEM MAIN MENU
+======================================================================
+  Account Management:
+  1.  Create New Account
+  2.  View All Accounts
+  3.  Search Account by Name
+  9.  Update Account Holder Name
 
-### 3. **Enhanced Error Handling**
-- **Transaction Limits**: Safety limits for deposits (R1M), withdrawals (R50K), transfers (R100K)
-- **Input Validation**: Improved validation for all user inputs
-- **Error Messages**: Clear, user-friendly error messages
+  Transactions:
+  4.  Deposit Money
+  5.  Withdraw Money
+  6.  Check Account Balance
+  7.  Transfer Money Between Accounts
 
-### 4. **Improved User Interface**
-- **9-Menu System**: Expanded from 7 to 9 options
-- **Formatted Outputs**: Better table formatting with transaction counts
-- **System Summary**: Display totals on exit
+  Reports & History:
+  8.  View Transaction History
 
-### Current Features Summary:
-- ✅ Account creation with auto-generated 12-digit account numbers
-- ✅ Deposit/Withdraw/Transfer with transaction limits
-- ✅ Check account balance
-- ✅ View all accounts with transaction counts
-- ✅ **NEW** Search accounts by name
-- ✅ **NEW** View transaction history
-- ✅ Input validation and enhanced error handling
-- ✅ Menu-driven interface with 9 options
+  System:
+  10. Exit System
+======================================================================
+Enter your choice (1-10): 1
+Run BankAccountManagementSystem.java as the main class
 
-### Project Structure (Updated):
-src/
-├── com/obcodes/bankaccountmanagementsystem/
-│ ├── Account.java # Complete with transaction history
-│ ├── BankAccountManagementSystem.java # Full banking operations
-│ ├── Menu.java # Enhanced menu system
-│ └── Transaction.java # NEW: Transaction record class
+🔧 Technical Implementation
+Core Classes
+1. Account Class
+Encapsulation: Private fields with public getters/setters
 
+Methods: deposit(), withdraw(), transfer(), checkBalance()
 
-### Sample Transaction History Output:
-====================================================================================================
-TRANSACTION HISTORY - JOHN DOE
-Account: 123456789012
-====================================================================================================
-Transaction ID Date & Time Type Amount Balance Account Description
+Validation: Built-in validation for all operations
 
-TXN123... 2024-01-15 10:30:15 DEPOSIT R5000.00 R5000.00 123456789012 Initial deposit
-TXN456... 2024-01-15 11:15:22 DEPOSIT R1000.00 R6000.00 123456789012 Cash deposit
-TXN789... 2024-01-15 12:45:10 WITHDRAWAL R500.00 R5500.00 123456789012 Cash withdrawal
-TXN012... 2024-01-15 14:20:05 TRANSFER_OUT R1000.00 R4500.00 123456789012 Transfer to Acc: 987654321098
+History: Maintains complete transaction records
 
-Total Transactions: 4
-Current Balance: R4500.00
+2. Transaction Class
+Immutable: Once created, transactions cannot be modified
 
+Tracking: Records type, amount, timestamp, and balance
 
-## Coming Next (Day 5 - Final Day):
-- File persistence (save/load accounts to file)
-- Additional account types (Savings, Current)
-- Interest calculation for savings accounts
-- Password protection for accounts
-- Export transaction history to file
+Formatting: Professional display formatting
+
+3. BankAccountManagementSystem Class
+Controller: Main application logic
+
+Menu Handling: 10-option menu system
+
+Validation: Comprehensive input validation
+
+Error Handling: Graceful error recovery
+
+4. Menu Class
+Separation of Concerns: Dedicated menu display logic
+
+User Interface: Professional formatting and colors
+
+Key OOP Concepts Demonstrated
+Encapsulation
+
+Private fields with controlled access
+
+Validation within setter methods
+
+Immutable transaction records
+
+Abstraction
+
+Complex banking operations simplified through methods
+
+Hidden implementation details
+
+Data Structures
+
+ArrayList for dynamic account storage
+
+Transaction history tracking
+
+Error Handling
+
+Try-catch blocks throughout
+
+Custom exception messages
+
+User-friendly error recovery
+
+📈 Development Timeline
+Day 1: Foundation
+Basic Account class with encapsulation
+
+Account number generation
+
+Initial menu structure
+
+Day 2: Core Operations
+Complete deposit and withdrawal functionality
+
+ArrayList management for multiple accounts
+
+Enhanced menu system
+
+Day 3: Advanced Features
+Money transfer between accounts
+
+Transaction confirmation
+
+Improved user interface
+
+Day 4: History & Search
+Transaction history tracking
+
+Account search by name
+
+Enhanced error handling
+
+Day 5: Final Polish
+Complete input validation
+
+Professional error handling
+
+Color-coded interface
+
+Final documentation
+
+🧪 Testing Features
+The system includes:
+
+5 pre-loaded test accounts
+
+Sample transactions for demonstration
+
+Boundary testing for all validations
+
+Error scenario handling
+
+📝 Code Quality Features
+JavaDoc Comments: Comprehensive documentation
+
+Meaningful Naming: Descriptive variable and method names
+
+Modular Design: Separation of concerns
+
+Constants Usage: No magic numbers
+
+Formatting: Consistent code style
+
+🎓 Educational Value
+This project is ideal for:
+
+Java beginners learning OOP concepts
+
+Students preparing for programming interviews
+
+Developers building portfolio projects
+
+Understanding real-world application development
+
+🔮 Future Enhancements
+Potential improvements for extended learning:
+
+File persistence for data storage
+
+Database integration
+
+GUI interface
+
+Web application version
+
+Additional account types (Savings, Business)
+
+Interest calculation
+
+Email notifications
+
+👨‍💻 Author
+Obakeng Phale
+Java Developer
+GitHub: @obcodes
+
+📄 License
+This project is open source and available for educational purposes.
