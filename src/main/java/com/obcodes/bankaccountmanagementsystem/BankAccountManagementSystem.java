@@ -14,7 +14,7 @@ public class BankAccountManagementSystem {
     private static final ArrayList<Account> accounts = new ArrayList<>();
     private static final Scanner scanner = new Scanner(System.in);
     
-    // Color codes for better UI (optional - works in most modern terminals)
+    // Color codes for better UI 
     private static final String RESET = "\u001B[0m";
     private static final String GREEN = "\u001B[32m";
     private static final String RED = "\u001B[31m";
